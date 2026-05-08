@@ -1,12 +1,11 @@
 import { ShoppingCart, Camera, MessageCircle, MapPin, Phone } from 'lucide-react'
-import logo from "../assets/logo.png"
+import logo from "../assets/logo.webp"
 
 const quickLinks = ['Home', 'Categories', 'Offers', 'Gallery', 'Contact']
 
 const socialIcons = [
-  { icon: Camera, label: 'Instagram' },
-  { icon: MessageCircle, label: 'Facebook' },
-  { icon: MessageCircle, label: 'Twitter' },
+  { icon: Camera, label: 'Instagram', link: 'https://www.instagram.com/tsbhypermarket?igsh=MW50cmN6dmF5c2t1cQ==' },
+  { icon: MessageCircle, label: 'Facebook', link: '#' },
 ]
 
 const Footer = () => {
@@ -27,8 +26,8 @@ const Footer = () => {
                   height: "40px",
                   objectFit: "contain",
                   borderRadius: "0.5rem",
-                  backgroundColor: "white", // optional (remove if not needed)
-                  padding: "4px" // optional spacing
+                  backgroundColor: "white",
+                  padding: "4px"
                 }}
               />
               <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.25rem' }}>
@@ -88,10 +87,12 @@ const Footer = () => {
               Follow Us
             </h4>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              {socialIcons.map(({ icon: Icon, label }) => (
+              {socialIcons.map(({ icon: Icon, label, link }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   style={{
                     width: 40,

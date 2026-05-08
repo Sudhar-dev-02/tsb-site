@@ -1,17 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-// ✅ AUTO LOAD IMAGES (BEST METHOD)
+// ✅ FASTEST IMAGE LOADING METHOD (Vite Optimized)
 
-// Ground Floor (img1.png → img19.png)
-const groundFloorImages = Array.from({ length: 19 }, (_, i) => ({
-  src: new URL(`../assets/gallery/img${i + 1}.png`, import.meta.url).href,
+// Ground Floor Images
+const groundFloorModules = import.meta.glob('../assets/gallery/*.{png,jpg,jpeg,webp}', {
+  eager: true,
+})
+
+// First Floor Images
+const firstFloorModules = import.meta.glob('../assets/gallery/firstfloor/*.{png,jpg,jpeg,webp}', {
+  eager: true,
+})
+
+// Convert to arrays
+const groundFloorImages = Object.values(groundFloorModules).map((module, i) => ({
+  src: module.default,
   alt: `Ground Floor ${i + 1}`,
 }))
 
-// First Floor (img1.jpeg → img24.jpeg)
-const firstFloorImages = Array.from({ length: 24 }, (_, i) => ({
-  src: new URL(`../assets/gallery/firstfloor/img${i + 1}.webp`, import.meta.url).href,
+const firstFloorImages = Object.values(firstFloorModules).map((module, i) => ({
+  src: module.default,
   alt: `First Floor ${i + 1}`,
 }))
 
@@ -19,6 +28,7 @@ const GallerySection = () => {
   const sectionRef = useRef(null)
   const [isInView, setIsInView] = useState(false)
 
+  // ✅ Intersection Animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -32,6 +42,19 @@ const GallerySection = () => {
     if (sectionRef.current) observer.observe(sectionRef.current)
 
     return () => observer.disconnect()
+  }, [])
+
+  // ✅ Preload first visible images for instant load
+  useEffect(() => {
+    groundFloorImages.slice(0, 6).forEach((img) => {
+      const preload = new Image()
+      preload.src = img.src
+    })
+
+    firstFloorImages.slice(0, 6).forEach((img) => {
+      const preload = new Image()
+      preload.src = img.src
+    })
   }, [])
 
   return (
@@ -112,7 +135,7 @@ const GallerySection = () => {
               <h3 style={{ color: '#fff', margin: 0 }}>Ground Floor</h3>
             </div>
 
-            {/* Preview (first 6 images) */}
+            {/* Preview */}
             <div
               style={{
                 display: 'grid',
@@ -128,12 +151,17 @@ const GallerySection = () => {
                     borderRadius: '0.5rem',
                     overflow: 'hidden',
                     aspectRatio: '1',
+                    backgroundColor: '#f3f3f3',
                   }}
                 >
                   <img
                     src={img.src}
                     alt={img.alt}
-                    loading="lazy"
+                    loading={i < 3 ? 'eager' : 'lazy'}
+                    fetchPriority={i < 3 ? 'high' : 'auto'}
+                    decoding="async"
+                    width="300"
+                    height="300"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -145,7 +173,13 @@ const GallerySection = () => {
               ))}
             </div>
 
-            <div style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--primary)' }}>
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '0.75rem',
+                color: 'var(--primary)',
+              }}
+            >
               Click to view gallery →
             </div>
           </Link>
@@ -195,12 +229,17 @@ const GallerySection = () => {
                     borderRadius: '0.5rem',
                     overflow: 'hidden',
                     aspectRatio: '1',
+                    backgroundColor: '#f3f3f3',
                   }}
                 >
                   <img
                     src={img.src}
                     alt={img.alt}
-                    loading="lazy"
+                    loading={i < 3 ? 'eager' : 'lazy'}
+                    fetchPriority={i < 3 ? 'high' : 'auto'}
+                    decoding="async"
+                    width="300"
+                    height="300"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -212,7 +251,13 @@ const GallerySection = () => {
               ))}
             </div>
 
-            <div style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--primary)' }}>
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '0.75rem',
+                color: 'var(--primary)',
+              }}
+            >
               Click to view gallery →
             </div>
           </Link>
@@ -225,6 +270,7 @@ const GallerySection = () => {
           transform: translateY(-6px) !important;
           box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
         }
+
         .gallery-box:hover img {
           transform: scale(1.08);
         }
