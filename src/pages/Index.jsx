@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import HeroSection from '../components/HeroSection'
 import CategoriesSection from '../components/CategoriesSection'
@@ -10,6 +12,15 @@ import BackgroundPattern from '../components/BackgroundPattern'
 import WhatsAppButton from '../components/WhatsAppButton'
 
 const Index = () => {
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const el = document.getElementById(location.state.scrollTo)
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100)
+    }
+  }, [location.state])
+
   return (
     <div style={{ position: 'relative', overflowX: 'hidden', width: '100%' }}>
       <BackgroundPattern />

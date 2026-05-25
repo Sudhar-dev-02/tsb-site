@@ -1,25 +1,40 @@
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import logo from "../assets/logo.webp"
 
 const links = [
-  { label: "Home", href: "/#home", },  //isRoute: true 
-  { label: "Categories", href: "/#categories" },, //isRoute: true
-  { label: "Offers", href: "/#offers" },
-  { label: "Gallery", href: "/#gallery",  }, //isRoute: true
-  { label: "Contact", href: "/#contact" },
+  { label: "Home", href: "#home" },
+  { label: "Categories", href: "#categories" },
+  { label: "Offers", href: "#offers" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Contact", href: "#contact" },
 ]
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener("scroll", onScroll)
+
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
+
+  const handleNavClick = (e, href) => {
+    e.preventDefault()
+    const sectionId = href.replace('#', '')
+    if (location.pathname === '/') {
+      const el = document.getElementById(sectionId)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/', { state: { scrollTo: sectionId } })
+    }
+    setMobileOpen(false)
+  }
 
   return (
     <nav
@@ -39,7 +54,7 @@ const Navbar = () => {
           minHeight: "70px",
         }}
       >
-        {/* LEFT SECTION - White Rounded Logo Area */}
+        {/* LEFT SECTION */}
         <div
           className="navbar-left-section"
           style={{
@@ -54,7 +69,7 @@ const Navbar = () => {
             zIndex: 2,
           }}
         >
-          {/* Logo Container */}
+          {/* LOGO */}
           <Link
             to="/"
             style={{
@@ -64,7 +79,6 @@ const Navbar = () => {
               textDecoration: "none",
             }}
           >
-            {/* Circular Logo Area */}
             <div
               className="navbar-logo-container"
               style={{
@@ -89,13 +103,22 @@ const Navbar = () => {
                 }}
               />
             </div>
-            
-            {/* Logo Text */}
-            <div className="navbar-logo-text hypermarket-text1" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "6px", lineHeight: 1.2, fontWeight: 800 }}>
+
+            {/* LOGO TEXT */}
+            <div
+              className="navbar-logo-text hypermarket-text1"
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "6px",
+                lineHeight: 1.2,
+                fontWeight: 800,
+              }}
+            >
               <span
                 className="navbar-tsb-text"
                 style={{
-                  // fontFamily: "var(--font-heading)",
                   fontWeight: 800,
                   fontSize: "2.1rem",
                   color: "var(--primary)",
@@ -104,10 +127,10 @@ const Navbar = () => {
               >
                 {/* TSB */}
               </span>
+
               <span
                 className="navbar-hypermarket-text"
                 style={{
-                  // fontFamily: "var(--font-heading)",
                   fontWeight: 600,
                   fontSize: "1.75rem",
                   color: "#666",
@@ -120,7 +143,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* RIGHT SECTION - Red Navigation Area (Desktop) */}
+        {/* DESKTOP NAVIGATION */}
         <div
           className="d-none d-md-flex"
           style={{
@@ -134,7 +157,7 @@ const Navbar = () => {
             paddingLeft: "40px",
           }}
         >
-          {/* Navigation Links */}
+          {/* NAV LINKS */}
           <div
             style={{
               display: "flex",
@@ -142,46 +165,28 @@ const Navbar = () => {
               gap: "2rem",
             }}
           >
-            {links.map((l) =>
-              l.isRoute ? (
-                <Link
-                  key={l.href}
-                  to={l.href}
-                  className="nav-link-hover"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.9rem",
-                    fontWeight: 500,
-                    color: "#FFFFFF",
-                    textDecoration: "none",
-                    transition: "all 0.3s ease",
-                    position: "relative",
-                  }}
-                >
-                  {l.label}
-                </Link>
-              ) : (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  className="nav-link-hover"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.9rem",
-                    fontWeight: 500,
-                    color: "#FFFFFF",
-                    textDecoration: "none",
-                    transition: "all 0.3s ease",
-                    position: "relative",
-                  }}
-                >
-                  {l.label}
-                </a>
-              )
-            )}
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={(e) => handleNavClick(e, l.href)}
+                className="nav-link-hover"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.9rem",
+                  fontWeight: 500,
+                  color: "#FFFFFF",
+                  textDecoration: "none",
+                  transition: "all 0.3s ease",
+                  position: "relative",
+                }}
+              >
+                {l.label}
+              </a>
+            ))}
           </div>
 
-          {/* Call Now Button */}
+          {/* CALL BUTTON */}
           <a
             href="tel:+917200995111"
             style={{
@@ -250,39 +255,22 @@ const Navbar = () => {
               gap: "1rem",
             }}
           >
-            {links.map((l) =>
-              l.isRoute ? (
-                <Link
-                  key={l.href}
-                  to={l.href}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    color: "#FFFFFF",
-                    padding: "0.5rem 0",
-                    textDecoration: "none",
-                  }}
-                >
-                  {l.label}
-                </Link>
-              ) : (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    color: "#FFFFFF",
-                    padding: "0.5rem 0",
-                    textDecoration: "none",
-                  }}
-                >
-                  {l.label}
-                </a>
-              )
-            )}
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={(e) => handleNavClick(e, l.href)}
+                style={{
+                  fontSize: "1rem",
+                  fontWeight: 500,
+                  color: "#FFFFFF",
+                  padding: "0.5rem 0",
+                  textDecoration: "none",
+                }}
+              >
+                {l.label}
+              </a>
+            ))}
 
             <a
               href="tel:+917200995111"
@@ -306,6 +294,10 @@ const Navbar = () => {
       )}
 
       <style>{`
+        html {
+          scroll-behavior: smooth;
+        }
+
         @keyframes slideDown {
           from {
             opacity: 0;
@@ -345,11 +337,11 @@ const Navbar = () => {
           .d-md-none {
             display: flex !important;
           }
+
           .d-none.d-md-flex {
             display: none !important;
           }
 
-          /* Mobile responsive logo section */
           .navbar-left-section {
             padding: 0.5rem 1rem !important;
             gap: 10px !important;
@@ -382,6 +374,7 @@ const Navbar = () => {
           .d-none.d-md-flex {
             display: flex !important;
           }
+
           .d-md-none {
             display: none !important;
           }

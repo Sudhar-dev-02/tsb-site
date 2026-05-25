@@ -398,7 +398,7 @@ const HeroSection = () => {
                 <ArrowRight style={{ width: '1rem', height: '1rem', transition: 'transform 0.3s ease' }} />
               </a>
               <a
-                href="/#categories"
+                href="#categories"
                 className="hero-btn-secondary"
                 style={{
                   display: 'inline-flex',
