@@ -208,6 +208,14 @@ const HeroSection = () => {
   const [delay3, setDelay3] = useState(false);
   const [delay4, setDelay4] = useState(false);
 
+  const handleScrollToCategories = (e) => {
+    e.preventDefault();
+    const el = document.getElementById('categories');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
     setIsVisible(true);
     const t1 = setTimeout(() => setDelay1(true), 200);
@@ -378,6 +386,7 @@ const HeroSection = () => {
             >
               <a
                 href="#categories"
+                onClick={handleScrollToCategories}
                 className="hero-btn-primary"
                 style={{
                   display: 'inline-flex',
@@ -399,6 +408,7 @@ const HeroSection = () => {
               </a>
               <a
                 href="#categories"
+                onClick={handleScrollToCategories}
                 className="hero-btn-secondary"
                 style={{
                   display: 'inline-flex',
