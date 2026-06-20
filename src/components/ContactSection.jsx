@@ -16,7 +16,7 @@ const contactInfo = [
   { 
     icon: Clock, 
     title: 'Store Hours', 
-    content: ['Mon – Sun: 8:00 AM – 10:00 PM']
+    content: ['Mon – Sun: 7:00 AM – 10:00 PM']
   },
   { 
     icon: Camera, 
